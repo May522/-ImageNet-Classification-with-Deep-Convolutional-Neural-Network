@@ -33,6 +33,14 @@ ImageNet包含各种分辨率图像，可网络需要输入的图像是固定的
 ......(此处省略一段)
 
 #### 3.3 Local Response Normalization
+ReLU有一种性质，它不需要对输入进行归一化normalization 来预防模型饱和。如果在某个神经元中ReLU的输入是正数，learning will happen in that neuron。然而我们发现局部归一化local normalization有助于提高网络的泛化能力。用a^i(x,y)表示在(x,y)位置进行卷积核i处理，然后经过RELU非线性函数的输出。response-normalized activity b^i(x,y)由以下表达式计算得出：
+***（。。。。。。。缺少一个公式）***
+其中求和部分是在同一spatial position对n个相邻的kernel maps进行求和。N表示该卷积层所有的卷积核个数。   。。。其中常数k,n,alpha,beta都是超参数，他们的值由验证集validation set决定。我们的模型设置这些常数为k=2, n=5, alpha=10^-4, beta=0.75。这种归一化normalization应用在ReLU函数之后。
+
+Response normalization使得我们的网络的top-1和top-5分别减少了1.4%和1.2%。我们在CIFAR-10数据集上也进行了验证，在没有归一化层normalization的情况下test error rate 为13%，含有归一化层normalization时test error rate降低为11%。
+
+#### 3.4 Overlapping Pooling
+
 
 
 
