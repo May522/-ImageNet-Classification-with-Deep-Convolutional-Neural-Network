@@ -40,7 +40,14 @@ ReLU有一种性质，它不需要对输入进行归一化normalization 来预�
 Response normalization使得我们的网络的top-1和top-5分别减少了1.4%和1.2%。我们在CIFAR-10数据集上也进行了验证，在没有归一化层normalization的情况下test error rate 为13%，含有归一化层normalization时test error rate降低为11%。
 
 #### 3.4 Overlapping Pooling
+CNN中的池化层pooling layers是对某一个卷积核的输出进行归纳缩小。步长为s，池化窗口宽度为z。传统的池化层中s=z。如果我们让 s<z, 那么就会产生重叠overlapping。本文中我们的池化层参数为 s=2, z=3。相比 s=2, z=2 这种没有重叠的传统做法，我们的含有重叠的做法使得top-1和top-5分别减少了0.4%和0.3%。我们还发现，用overlapping pooling 在预防过拟合上起到了一点作用。
 
+#### 3.5 Overall Architecture
+接下来介绍我们设计的网络的框架。网络包含8个层，前五个是卷积层，后三个是全连接层。第二，第四，第五个卷积层的卷积核仅仅处理在同一GPU中上一层的输出。第三个卷积层的卷积核处理第二层的全部输出。全连接层中的神经元与上一层的神经元全部连接。在第一和第二个卷积层后都有Response-normalization层。在Response-normalization层和第五个卷积层后面有最大池化层Max-pooling layers。在每一个卷积层和全连接层后都有ReLU非线性函数。
+
+把224 X224 X 3的图像作为第一个卷积层的输入，用96个11 X 11 X 3的卷积核，步幅为4，处理输入图像。以第一个卷积层的输出作为输入，用256个 5 X 5 X 48的卷积核进行处理。第三个卷积层用384个3 X 3 X 256a卷积核来处理第二个卷积核的输出。第四个卷积层有384个 3 X 3 X 192卷积核，第五个卷积层有256个3 X 3 X 192个卷积核。每个全连接层都有4096个神经元。
+
+### 4 Reducing Overfitting
 
 
 
